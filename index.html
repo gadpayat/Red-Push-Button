@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Red Press Button</title>
+<title>Emergency Press Button</title>
 
 <style>
 body {
@@ -15,33 +15,81 @@ body {
     background: transparent;
 }
 
-/* Red push button style */
+/* EMERGENCY BUTTON */
 .button {
+    width: 160px;
+    height: 160px;
     background: red;
     color: white;
-    font-size: 24px;
-    padding: 20px 50px;
     border: none;
-    border-radius: 50px;
+    border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 6px 0 darkred;
-    transition: all 0.1s ease;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 20px red, 0 0 40px darkred;
+    transition: transform 0.1s ease;
 }
 
-/* Press effect */
+/* Press down effect */
 .button:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 darkred;
+    transform: scale(0.90);
+}
+
+/* Pulsing glow animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px red, 0 0 20px darkred;
+    }
+    50% {
+        transform: scale(1.10);
+        box-shadow: 0 0 30px red, 0 0 60px crimson;
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px red, 0 0 20px darkred;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<button class="button" onclick="goToSite()">Press</button>
+<button class="button" onclick="activateButton()">
+    Press
+</button>
 
 <script>
-function goToSite() {
+// 🔊 Beep sound (no external file needed)
+function playSound() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = "square";
+    oscillator.frequency.value = 750; // alarm tone
+
+    gainNode.gain.value = 0.2;
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.18);
+}
+
+// 🚀 Button action
+function activateButton() {
+    playSound();
+
     window.open(
         "https://philgeps.gov.ph/CmsHomePages/regMerchants",
         "_blank"
